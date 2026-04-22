@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zara Hussain Akhonzadi | Cybersecurity Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:       #050a0f;
+      --surface:  #0a1520;
+      --border:   #0d3a5a;
+      --cyan:     #00e5ff;
+      --teal:     #00b4cc;
+      --green:    #00ff9d;
+      --dim:      #4a7a8a;
+      --text:     #cce8f0;
+      --muted:    #5a8a9a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── SCANLINE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,229,255,.018) 2px,
+        rgba(0,229,255,.018) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── GRID BG ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 6vw;
+      background: rgba(5,10,15,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Orbitron', monospace;
+      font-size: .95rem;
+      color: var(--cyan);
+      letter-spacing: .15em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .8rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: color .25s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative; z-index: 1;
+      padding: 100px 8vw;
+    }
+    section:first-of-type { padding-top: 140px; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding-top: 120px;
+    }
+    .hero-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .8rem;
+      color: var(--green);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp .7s .2s forwards;
+    }
+    .hero-name {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.05;
+      letter-spacing: .04em;
+      opacity: 0;
+      animation: fadeUp .7s .4s forwards;
+    }
+    .hero-name .highlight { color: var(--cyan); }
+    .hero-sub {
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--muted);
+      margin-top: 1rem;
+      max-width: 520px;
+      opacity: 0;
+      animation: fadeUp .7s .6s forwards;
+    }
+    .hero-sub strong { color: var(--teal); font-weight: 600; }
+
+    .hero-status {
+      display: inline-flex; align-items: center; gap: .6rem;
+      margin-top: 2.5rem;
+      padding: .55rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .78rem;
+      color: var(--green);
+      letter-spacing: .12em;
+      opacity: 0;
+      animation: fadeUp .7s .8s forwards;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    .hero-btns {
+      display: flex; gap: 1.2rem; flex-wrap: wrap;
+      margin-top: 2.8rem;
+      opacity: 0;
+      animation: fadeUp .7s 1s forwards;
+    }
+    .btn {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .82rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: .75rem 1.8rem;
+      border: none; cursor: pointer;
+      text-decoration: none;
+      transition: all .25s;
+      display: inline-block;
+    }
+    .btn-primary {
+      background: var(--cyan);
+      color: #050a0f;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+    .btn-primary:hover { background: var(--green); }
+    .btn-outline {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+    .btn-outline:hover { background: rgba(0,229,255,.08); }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex; align-items: center; gap: 1.2rem;
+      margin-bottom: 3.5rem;
+    }
+    .section-num {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
+      color: var(--green);
+      letter-spacing: .15em;
+    }
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .06em;
+    }
+    .section-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+      max-width: 300px;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .about-text p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 1.2rem;
+    }
+    .about-text p strong { color: var(--cyan); font-weight: 600; }
+
+    .about-cards { display: flex; flex-direction: column; gap: 1rem; }
+    .info-card {
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      background: var(--surface);
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    }
+    .info-card .label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .72rem;
+      color: var(--green);
+      letter-spacing: .15em;
+      margin-bottom: .3rem;
+    }
+    .info-card .value {
+      font-size: 1rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── SKILLS ── */
+    #skills { background: rgba(0,229,255,.015); }
+    .skills-intro {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      padding: 1rem 1.4rem;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      background: var(--surface);
+      line-height: 1.8;
+    }
+    .skills-intro span { color: var(--green); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+    .skill-card {
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+      transition: border-color .25s, transform .25s;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+    .skill-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .skill-card:hover { border-color: var(--cyan); transform: translateY(-3px); }
+    .skill-card:hover::before { opacity: 1; }
+
+    .skill-icon { font-size: 1.8rem; margin-bottom: .8rem; }
+    .skill-name {
+      font-family: 'Orbitron', monospace;
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: .08em;
+      margin-bottom: .4rem;
+    }
+    .skill-desc { font-size: .9rem; color: var(--muted); }
+    .skill-badge {
+      display: inline-block;
+      margin-top: .8rem;
+      padding: .2rem .7rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .68rem;
+      letter-spacing: .1em;
+      border-radius: 1px;
+    }
+    .badge-learning { background: rgba(0,255,157,.1); color: var(--green); border: 1px solid rgba(0,255,157,.25); }
+    .badge-planned  { background: rgba(0,229,255,.07); color: var(--cyan);  border: 1px solid rgba(0,229,255,.2); }
+
+    /* ── LEARNING PATH ── */
+    .timeline { position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 1px;
+      background: linear-gradient(180deg, var(--cyan), var(--border), transparent);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 2.5rem;
+      padding-left: 1.8rem;
+    }
+    .tl-dot {
+      position: absolute; left: -2.45rem; top: 6px;
+      width: 12px; height: 12px;
+      border: 2px solid var(--cyan);
+      background: var(--bg);
+      border-radius: 50%;
+      transition: background .25s;
+    }
+    .tl-item.active .tl-dot { background: var(--cyan); box-shadow: 0 0 12px var(--cyan); }
+    .tl-item.upcoming .tl-dot { border-color: var(--border); }
+
+    .tl-phase {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .72rem;
+      color: var(--green);
+      letter-spacing: .15em;
+      margin-bottom: .3rem;
+    }
+    .tl-item.upcoming .tl-phase { color: var(--muted); }
+    .tl-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .4rem;
+    }
+    .tl-item.upcoming .tl-title { color: var(--dim); }
+    .tl-desc { font-size: .95rem; color: var(--muted); }
+
+    /* ── PROJECTS ── */
+    #projects { background: rgba(0,229,255,.015); }
+    .projects-note {
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--cyan);
+      background: var(--surface);
+      font-size: .95rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+    .projects-note strong { color: var(--cyan); }
+
+    .project-placeholder {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+    .proj-card {
+      padding: 2rem;
+      border: 1px dashed var(--border);
+      background: var(--surface);
+      text-align: center;
+      transition: border-color .25s;
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+    .proj-card:hover { border-color: var(--cyan); border-style: solid; }
+    .proj-placeholder-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: .4; }
+    .proj-placeholder-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .78rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      line-height: 1.8;
+    }
+    .proj-placeholder-text em { color: var(--cyan); font-style: normal; }
+
+    /* ── CONTACT ── */
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .contact-text p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+    .contact-text p strong { color: var(--cyan); }
+
+    .contact-links { display: flex; flex-direction: column; gap: .8rem; margin-top: 2rem; }
+    .contact-link {
+      display: flex; align-items: center; gap: 1rem;
+      padding: .9rem 1.2rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      text-decoration: none;
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .82rem;
+      letter-spacing: .08em;
+      transition: border-color .25s, color .25s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    }
+    .contact-link:hover { border-color: var(--cyan); color: var(--cyan); }
+    .contact-link .link-icon { font-size: 1.1rem; }
+
+    .manifesto {
+      padding: 2rem;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--cyan);
+      background: var(--surface);
+    }
+    .manifesto-title {
+      font-family: 'Orbitron', monospace;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: .1em;
+      margin-bottom: 1.2rem;
+    }
+    .manifesto-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 2;
+    }
+    .manifesto-text .accent { color: var(--green); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      padding: 2rem 8vw;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    footer p {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+    }
+    footer p span { color: var(--green); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,157,.5); }
+      50%       { box-shadow: 0 0 0 6px rgba(0,255,157,0); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    .cursor {
+      display: inline-block;
+      width: 3px; height: 1.1em;
+      background: var(--cyan);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    /* ── FADE-IN ON SCROLL ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s, transform .6s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 5vw; }
+      .nav-links { gap: 1.4rem; }
+      .nav-links a { font-size: .7rem; }
+      section { padding: 80px 6vw; }
+      .about-grid, .contact-wrapper { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-name { font-size: clamp(2rem, 9vw, 3.2rem); }
+    }
+    @media (max-width: 480px) {
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="#hero" class="nav-logo">ZHA<span>_</span>SEC</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#path">Journey</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <p class="hero-tag">// Cybersecurity Student · BS DFCS · Semester II</p>
+    <h1 class="hero-name">
+      Zara Hussain<br/><span class="highlight">Akhonzadi</span><span class="cursor"></span>
+    </h1>
+    <p class="hero-sub">
+      Aspiring <strong>Cybersecurity Professional</strong> — beginning from zero, 
+      building toward mastery. One commit at a time.
+    </p>
+    <div class="hero-status">
+      <div class="dot"></div>
+      Currently learning — portfolio updates as I grow
+    </div>
+    <div class="hero-btns">
+      <a href="#projects" class="btn btn-primary">View Projects</a>
+      <a href="#contact" class="btn btn-outline">Get In Touch</a>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <div class="section-header reveal">
+      <span class="section-num">01 //</span>
+      <h2 class="section-title">About Me</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          Hi, I'm <strong>Zara</strong> — a second-semester BS Digital Forensics & Cybersecurity 
+          student with a clear mission: to become a skilled cybersecurity professional through 
+          consistent learning and hands-on practice.
+        </p>
+        <p>
+          Right now, I'm at the very beginning of my journey. I don't yet have 
+          certifications or projects to show — but I believe in <strong>documenting 
+          the process</strong>, not just the destination. This portfolio is a living 
+          record of my growth.
+        </p>
+        <p>
+          Every security expert was once a beginner. The difference is that they 
+          <strong>started</strong> — and kept going. This is my start.
+        </p>
+      </div>
+      <div class="about-cards reveal">
+        <div class="info-card">
+          <div class="label">// Full Name</div>
+          <div class="value">Zara Hussain Akhonzadi</div>
+        </div>
+        <div class="info-card">
+          <div class="label">// Degree</div>
+          <div class="value">BS Digital Forensics & Cybersecurity</div>
+        </div>
+        <div class="info-card">
+          <div class="label">// Current Status</div>
+          <div class="value">2nd Semester · Actively Learning</div>
+        </div>
+        <div class="info-card">
+          <div class="label">// Goal</div>
+          <div class="value">Become a Cybersecurity Professional</div>
+        </div>
+        <div class="info-card">
+          <div class="label">// Approach</div>
+          <div class="value">Grow in Public · Document Everything</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SKILLS ── -->
+  <section id="skills">
+    <div class="section-header reveal">
+      <span class="section-num">02 //</span>
+      <h2 class="section-title">Skills & Tools</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-intro reveal">
+      <span>$</span> status --current<br/>
+      <span>→</span> Currently in early-stage learning. Skills listed are either actively being studied or planned for upcoming semesters. Honesty &amp; transparency are core to this portfolio.
+    </div>
+    <div class="skills-grid">
+
+      <div class="skill-card reveal">
+        <div class="skill-icon">🖥️</div>
+        <div class="skill-name">Networking Basics</div>
+        <div class="skill-desc">IP addressing, OSI model, TCP/IP fundamentals — building the foundation.</div>
+        <span class="skill-badge badge-learning">Learning Now</span>
+      </div>
+
+      <div class="skill-card reveal">
+        <div class="skill-icon">🐧</div>
+        <div class="skill-name">Linux OS</div>
+        <div class="skill-desc">Getting comfortable with the command line — essential for any cybersecurity path.</div>
+        <span class="skill-badge badge-learning">Learning Now</span>
+      </div>
+
+      <div class="skill-card reveal">
+        <div class="skill-icon">🔐</div>
+        <div class="skill-name">Security Fundamentals</div>
+        <div class="skill-desc">CIA triad, threat types, basic cryptography concepts from coursework.</div>
+        <span class="skill-badge badge-learning">Learning Now</span>
+      </div>
+
+      <div class="skill-card reveal">
+        <div class="skill-icon">🕵️</div>
+        <div class="skill-name">Digital Forensics Intro</div>
+        <div class="skill-desc">Introduction to evidence handling, investigation methodology, and forensic principles.</div>
+        <span class="skill-badge badge-learning">Learning Now</span>
+      </div>
+
+      <div class="skill-card reveal">
+        <div class="skill-icon">🐍</div>
+        <div class="skill-name">Python for Security</div>
+        <div class="skill-desc">Scripting for automation and security tools — on my roadmap for upcoming semesters.</div>
+        <span class="skill-badge badge-planned">Planned</span>
+      </div>
+
+      <div class="skill-card reveal">
+        <div class="skill-icon">🛡️</div>
+        <div class="skill-name">Ethical Hacking</div>
+        <div class="skill-desc">Penetration testing concepts, Kali Linux — targeting this in future semesters.</div>
+        <span class="skill-badge badge-planned">Planned</span>
+      </div>
+
+      <div class="skill-card reveal">
+        <div class="skill-icon">📊</div>
+        <div class="skill-name">SIEM & Log Analysis</div>
+        <div class="skill-desc">Security monitoring and incident response tools — part of my long-term plan.</div>
+        <span class="skill-badge badge-planned">Planned</span>
+      </div>
+
+      <div class="skill-card reveal">
+        <div class="skill-icon">☁️</div>
+        <div class="skill-name">Cloud Security</div>
+        <div class="skill-desc">AWS/Azure security fundamentals — essential skill for the modern threat landscape.</div>
+        <span class="skill-badge badge-planned">Planned</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── LEARNING PATH ── -->
+  <section id="path">
+    <div class="section-header reveal">
+      <span class="section-num">03 //</span>
+      <h2 class="section-title">My Journey</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+
+      <div class="tl-item active reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">// Phase 01 · Now</div>
+        <div class="tl-title">Building the Foundation</div>
+        <div class="tl-desc">
+          BS DFCS — Semester II. Learning networking, operating systems, 
+          and introductory security concepts. Setting up this portfolio to 
+          document the journey from day one.
+        </div>
+      </div>
+
+      <div class="tl-item upcoming reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">// Phase 02 · Near Future</div>
+        <div class="tl-title">Hands-On Practice</div>
+        <div class="tl-desc">
+          CTF challenges (TryHackMe, HackTheBox). First Python security scripts. 
+          Completing CompTIA Security+ preparation. Building a home lab 
+          environment.
+        </div>
+      </div>
+
+      <div class="tl-item upcoming reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">// Phase 03 · Mid-Term</div>
+        <div class="tl-title">Specialization & Certifications</div>
+        <div class="tl-desc">
+          CompTIA Security+ or CEH certification. Deep dive into digital forensics 
+          tools (Autopsy, FTK). Internship or real-world exposure. 
+          Building meaningful projects.
+        </div>
+      </div>
+
+      <div class="tl-item upcoming reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">// Phase 04 · Long-Term</div>
+        <div class="tl-title">Professional Entry</div>
+        <div class="tl-desc">
+          Land a role in cybersecurity — whether SOC analyst, digital forensics 
+          investigator, or penetration tester. Continue learning. 
+          Never stop.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── PROJECTS ── -->
+  <section id="projects">
+    <div class="section-header reveal">
+      <span class="section-num">04 //</span>
+      <h2 class="section-title">Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-note reveal">
+      <strong>// Honest update:</strong> I'm in my second semester and haven't built projects yet — but this section will grow. 
+      Check back as I complete coursework, CTF challenges, and personal experiments. 
+      Every project here will reflect real learning.
+    </div>
+    <div class="project-placeholder">
+
+      <div class="proj-card reveal">
+        <div class="proj-placeholder-icon">🔬</div>
+        <div class="proj-placeholder-text">
+          <em>[ Coming Soon ]</em><br/>
+          First CTF Write-Up<br/>
+          TryHackMe / HackTheBox
+        </div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-placeholder-icon">🐍</div>
+        <div class="proj-placeholder-text">
+          <em>[ Coming Soon ]</em><br/>
+          Python Security Script<br/>
+          Network Scanner / Password Tool
+        </div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-placeholder-icon">🕵️</div>
+        <div class="proj-placeholder-text">
+          <em>[ Coming Soon ]</em><br/>
+          Digital Forensics Lab<br/>
+          File Analysis &amp; Evidence Recovery
+        </div>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-placeholder-icon">📡</div>
+        <div class="proj-placeholder-text">
+          <em>[ Coming Soon ]</em><br/>
+          Network Analysis Project<br/>
+          Wireshark &amp; Packet Capture
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <div class="section-header reveal">
+      <span class="section-num">05 //</span>
+      <h2 class="section-title">Contact</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-wrapper">
+      <div class="contact-text reveal">
+        <p>
+          I'm a student, learner, and a future cybersecurity professional. 
+          Whether you want to connect, collaborate, or just say hi — 
+          I'd love to hear from you.
+        </p>
+        <p>
+          <strong>Mentors, fellow students, and professionals</strong> in the 
+          field are especially welcome to reach out. I'm always looking to learn 
+          from people ahead of me on this path.
+        </p>
+        <div class="contact-links">
+          <a href="https://github.com/" target="_blank" class="contact-link">
+            <span class="link-icon">⌨️</span>
+            github.com/ZaraHussain · (add your handle)
+          </a>
+          <a href="https://linkedin.com/" target="_blank" class="contact-link">
+            <span class="link-icon">💼</span>
+            linkedin.com/in/ZaraHussain · (add your profile)
+          </a>
+          <a href="mailto:your@email.com" class="contact-link">
+            <span class="link-icon">📨</span>
+            your@email.com · (add your email)
+          </a>
+        </div>
+      </div>
+
+      <div class="manifesto reveal">
+        <div class="manifesto-title">// My Commitment</div>
+        <div class="manifesto-text">
+          I started this portfolio on <span class="accent">Day 1</span> of my journey —<br/>
+          not when I had something impressive to show,<br/>
+          but because growth is worth documenting.<br/><br/>
+          I will <span class="accent">update this regularly</span> as I learn,<br/>
+          complete courses, finish projects,<br/>
+          and earn certifications.<br/><br/>
+          The best time to plant a tree was 10 years ago.<br/>
+          The second best time is <span class="accent">right now.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p>© 2025 <span>Zara Hussain Akhonzadi</span> · BS DFCS · Semester II</p>
+    <p>Built with intention. <span>Updated as I grow.</span></p>
+  </footer>
+
+  <!-- ── SCROLL REVEAL ── -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
